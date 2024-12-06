@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* div[modal-backdrop] {
+    background-color: rgb(17 24 39 / 50%);
+}
+
+@media (prefers-color-scheme: dark) {
+    div[modal-backdrop] {
+        background-color: rgb(17 24 39 / 80%);
+    }
+} */

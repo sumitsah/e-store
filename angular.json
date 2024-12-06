@@ -7,8 +7,8 @@
       "projectType": "application",
       "schematics": {},
       "root": "",
-      "sourceRoot": "src",
-      "prefix": "app",
+      "sourceRoot": "/src",
+      "prefix": "store",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -24,6 +24,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
               }
             ],
             "styles": [
