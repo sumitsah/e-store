@@ -1,23 +1,24 @@
 import { Component, computed, effect, inject, OnInit, signal, untracked, WritableSignal } from '@angular/core';
-import { Product, ProductCartDetails } from '../../model/product';
+import { CartListProduct, Product, ProductCartDetails } from '../../model/product';
 import { ProductService } from '../../service/product.service';
 import { LocalStorageService } from '../../service/local-storage.service';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'store-cart-items',
-  imports: [],
+  imports: [CurrencyPipe],
   templateUrl: './cart-items.component.html',
   styleUrl: './cart-items.component.css'
 })
 export class CartItemsComponent implements OnInit {
-  cartList = signal<Product[] | ProductCartDetails[] | any[]>([]);
+  cartList = signal<Product[]>([]);
   cartProducts: ProductCartDetails[] = [];
   price = signal<number[]>([]);
   quantity = signal<number[]>([]);
 
   originalPrice = computed(() =>
     Math.round(this.cartList().reduce((acc, curr) => {
-      return (acc = (curr.price * curr.quantity) + acc);
+      return (acc = (curr.price * (curr.quantity || 1)) + acc);
     }, 0)))
 
   savings = computed(() => Math.round((this.originalPrice() * 5 / 100)));
@@ -41,53 +42,32 @@ export class CartItemsComponent implements OnInit {
         if (product.id === cartProduct.productId) {
           return { ...product, quantity: cartProduct.quantity }
         }
-      })))
-
-      this.cartList.update(cartList => cartList.flatMap((element) => element.filter((ele: ProductCartDetails) => ele !== undefined)))
+      })).flatMap((element) => element.filter((ele) => ele !== undefined)))
     })
 
   }
 
-  increment(product: Product | ProductCartDetails | any) {
+  increment(product: Product) {
     product.quantity = (product.quantity || 1) + 1;
     this.productService.addItemToCart(product);
     this.cartList.update(cartList => [...cartList])
   }
 
   decrement(product: Product | any) {
-    product.quantity = product.quantity - 1;
-    let index;
-    // Mutating the actual object using find, need to find a better way to perform this operation.
-    this.cartProducts.find((cartItem, i) => {
-      if (cartItem.productId === product.id) {
-        if (cartItem.quantity == 1) {
-          index = i
-        } else {
-          cartItem.quantity--;
-        }
-      }
-    })
-    if (!index) {
+    if (product.quantity === 1) {
+      this.removeItemFromCart(product);
+    } else {
+      product.quantity = product.quantity - 1;
       this.cartList.update(items => items.map(item => item.id === product.id ? product : item));
+      this.cartProducts = this.cartProducts.map(item => item.productId === product.id ? { ...item, quantity: product.quantity } : item);
+      this.productService.productCount.next(this.cartProducts.reduce((acc, curr) => acc = curr.quantity + acc, 0));
+      this.localStorage.setItem('productCart', this.cartProducts)
     }
-    this.productService.productCount.next(this.cartProducts.reduce((acc, curr) => acc = curr.quantity + acc, 0));
-    this.localStorage.setItem('productCart', this.cartProducts)
-    index !== undefined ? this.removeItemAndUpdateState(index) : ''
   }
 
   removeItemFromCart(product: Product) {
     this.cartProducts = this.cartProducts.filter(item => item.productId !== product.id);
     this.cartList.update(items => items.filter(item => item.id !== product.id));
-    this.productService.productCount.next(this.cartProducts.reduce((acc, curr) => acc = curr.quantity + acc, 0));
-    this.localStorage.setItem('productCart', this.cartProducts)
-  }
-
-  removeItemAndUpdateState(index: number) {
-    this.cartProducts.splice(index, 1);
-    this.cartList.update(cartList => {
-      cartList.splice(index, 1);
-      return [...cartList];
-    })
     this.productService.productCount.next(this.cartProducts.reduce((acc, curr) => acc = curr.quantity + acc, 0));
     this.localStorage.setItem('productCart', this.cartProducts)
   }

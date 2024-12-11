@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="text-end md:order-4 md:w-32">
                                     <p class="text-base font-bold text-gray-900 dark:text-white">
-                                        {{ cartItem.price * cartItem.quantity}}
+                                        {{ cartItem.price * (cartItem.quantity || 1) | currency:'INR':'symbol'}}
                                     </p>
                                 </div>
                             </div>
@@ -396,29 +396,34 @@
                         <div class="space-y-2">
                             <dl class="flex items-center justify-between gap-4">
                                 <dt class="text-base font-normal text-gray-500 dark:text-gray-400">Original price</dt>
-                                <dd class="text-base font-medium text-gray-900 dark:text-white">{{originalPrice()}}</dd>
+                                <dd class="text-base font-medium text-gray-900 dark:text-white">{{originalPrice() |
+                                    currency:'INR':'symbol'}}</dd>
                             </dl>
 
                             <dl class="flex items-center justify-between gap-4">
                                 <dt class="text-base font-normal text-gray-500 dark:text-gray-400">Savings</dt>
-                                <dd class="text-base font-medium text-green-600">-{{savings()}}</dd>
+                                <dd class="text-base font-medium text-green-600">-{{savings() |
+                                    currency:'INR':'symbol'}}</dd>
                             </dl>
 
                             <dl class="flex items-center justify-between gap-4">
                                 <dt class="text-base font-normal text-gray-500 dark:text-gray-400">Store Pickup</dt>
-                                <dd class="text-base font-medium text-gray-900 dark:text-white">{{ pickupCharge()}}</dd>
+                                <dd class="text-base font-medium text-gray-900 dark:text-white">{{ pickupCharge() |
+                                    currency:'INR':'symbol'}}</dd>
                             </dl>
 
                             <dl class="flex items-center justify-between gap-4">
                                 <dt class="text-base font-normal text-gray-500 dark:text-gray-400">Tax</dt>
-                                <dd class="text-base font-medium text-gray-900 dark:text-white">{{tax()}}</dd>
+                                <dd class="text-base font-medium text-gray-900 dark:text-white">{{tax() |
+                                    currency:'INR':'symbol'}}</dd>
                             </dl>
                         </div>
 
                         <dl
                             class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
                             <dt class="text-base font-bold text-gray-900 dark:text-white">Total</dt>
-                            <dd class="text-base font-bold text-gray-900 dark:text-white">{{total()}}</dd>
+                            <dd class="text-base font-bold text-gray-900 dark:text-white">{{total() |
+                                currency:'INR':'symbol' }}</dd>
                         </dl>
                     </div>
 
