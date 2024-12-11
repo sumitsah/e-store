@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { LoginResponse, UserLogin } from '../model/user';
 import { BehaviorSubject, catchError, Observable, Subject, tap } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
+import { ProductService } from './product.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class AuthService {
 
   private httpClient = inject(HttpClient);
   private localStorage = inject(LocalStorageService)
+  private productService = inject(ProductService);
   private isAuthenticated$ = new BehaviorSubject<boolean>(this.hasToken());
   constructor() { }
   httpOptions = {
@@ -44,6 +46,9 @@ export class AuthService {
 
   doLogout() {
     this.localStorage.removeItem('token');
+    this.localStorage.removeItem('userDetails');
+    this.localStorage.clear();
+    this.productService.productCount.next(0);
     this.isAuthenticated$.next(false);
   }
 

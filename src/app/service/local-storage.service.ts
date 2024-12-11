@@ -19,4 +19,8 @@ export class LocalStorageService {
     console.log(key)
     localStorage.removeItem(key);
   }
+
+  clear() {
+    localStorage.clear();
+  }
 }
