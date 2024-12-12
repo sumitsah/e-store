@@ -13,8 +13,6 @@ import { CurrencyPipe } from '@angular/common';
 export class CartItemsComponent implements OnInit {
   cartList = signal<Product[]>([]);
   cartProducts: ProductCartDetails[] = [];
-  price = signal<number[]>([]);
-  quantity = signal<number[]>([]);
 
   originalPrice = computed(() =>
     Math.round(this.cartList().reduce((acc, curr) => {

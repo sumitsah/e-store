@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
 import { LoginResponse, UserDetails } from '../../model/user';
 import { LocalStorageService } from '../../service/local-storage.service';
@@ -19,8 +19,8 @@ export class LoginComponent {
   private router = inject(Router);
 
   loginForm = new FormGroup({
-    username: new FormControl(''),
-    password: new FormControl('')
+    username: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    password: new FormControl('', Validators.required)
   })
 
 
