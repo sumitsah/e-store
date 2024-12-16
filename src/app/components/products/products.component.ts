@@ -3,11 +3,11 @@ import { AuthService } from '../../service/auth.service';
 import { ProductService } from '../../service/product.service';
 import { Product, ProductCart, ProductCartDetails } from '../../model/product';
 import { LocalStorageService } from '../../service/local-storage.service';
-import { CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'store-products',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, AsyncPipe],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
@@ -18,6 +18,7 @@ export class ProductsComponent implements OnInit {
 
   productService = inject(ProductService);
   localStorage = inject(LocalStorageService);
+  products$ = this.productService.products$;
 
   ngOnInit(): void {
 

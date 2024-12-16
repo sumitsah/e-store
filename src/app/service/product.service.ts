@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal, Signal } from '@angular/core';
-import { BehaviorSubject, catchError, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, shareReplay } from 'rxjs';
 import { Product, ProductCart, ProductCartDetails } from '../model/product';
 import { environment } from '../../environments/environment';
 import { LocalStorageService } from './local-storage.service';
@@ -16,6 +16,12 @@ export class ProductService {
 
   products: Product[] = [];
   cartProducts!: ProductCartDetails[];
+  products$ = this.http.get<Product[]>(this.url).pipe(
+    shareReplay(),
+    catchError((err, caught) => {
+      throw `error => ${err}`
+    })
+  )
 
   getAllProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.url).pipe(

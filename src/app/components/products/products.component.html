@@ -1,6 +1,6 @@
 <section class="max-w-screen-xl mx-auto py-8 antialiased md:py-12">
     <div class="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4">
-        @for (product of products; track product.id) {
+        @for (product of products$ | async; track product.id) {
 
         <div
             class="transition duration-200 ease-in-out rounded-lg cursor-pointer border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 hover:-translate-y-1 hover:scale-105">
